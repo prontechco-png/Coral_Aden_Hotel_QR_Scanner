@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>ماسح كروت الواي فاي - فندق كورال عدن | Coral Hotel Aden</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://raw.githubusercontent.com/prontechco-png/Coral_Aden_Hotel_QR_Scanner/main/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', Tahoma, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0b1329 0%, #151e36 50%, #0b1329 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 14px;
+            direction: rtl;
+        }
+
+        .scanner-card {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(21, 30, 54, 0.95);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            border: 1.5px solid rgba(225, 29, 72, 0.35);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(225, 29, 72, 0.2);
+            border-radius: 26px;
+            padding: 24px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .scanner-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #e11d48, #00a8ff, #d4af37);
+        }
+
+        .hotel-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(225, 29, 72, 0.18);
+            color: #fb7185;
+            border: 1px solid rgba(225, 29, 72, 0.35);
+            padding: 6px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 20px;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .subtitle {
+            font-size: 12.5px;
+            color: #94a3b8;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .camera-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 1;
+            max-height: 310px;
+            border-radius: 22px;
+            overflow: hidden;
+            background: #000000;
+            border: 2px solid #e11d48;
+            box-shadow: 0 0 25px rgba(225, 29, 72, 0.35);
+            margin-bottom: 16px;
+        }
+
+        #reader {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        #reader video {
+            object-fit: cover !important;
+            width: 100% !important;
+            height: 100% !important;
+            border-radius: 20px;
+        }
+
+        .scan-overlay {
+            position: absolute;
+            inset: 16px;
+            border: 2px dashed rgba(251, 113, 133, 0.45);
+            border-radius: 18px;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .laser-line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 3.5px;
+            background: #fb7185;
+            box-shadow: 0 0 14px #e11d48, 0 0 24px #fb7185;
+            animation: laserMove 2.2s infinite ease-in-out;
+        }
+
+        @keyframes laserMove {
+            0% { top: 0%; opacity: 0.8; }
+            50% { top: 96%; opacity: 1; }
+            100% { top: 0%; opacity: 0.8; }
+        }
+
+        .safari-box {
+            margin-bottom: 14px;
+        }
+
+        .btn-safari {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            height: 48px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: #ffffff !important;
+            font-weight: 800;
+            font-size: 14px;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-safari:hover {
+            background: linear-gradient(135deg, #0369a1, #075985);
+            transform: translateY(-1px);
+        }
+
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .btn-action {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 12px;
+            background: #1e293b;
+            color: #f1f5f9;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            font-size: 12.5px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-action:hover {
+            background: #334155;
+            border-color: #38bdf8;
+        }
+
+        .status-box {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 14px;
+            padding: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            font-size: 13px;
+            color: #cbd5e1;
+            margin-bottom: 14px;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.5;
+        }
+
+        .btn-back {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.06);
+            color: #94a3b8;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            text-decoration: none;
+            font-size: 13.5px;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            border-color: #94a3b8;
+        }
+
+        .footer-note {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 14px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 8px;
+        }
+
+        .footer-note b {
+            color: #38bdf8;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scanner-card">
+        <div class="hotel-badge">
+            <span>🏨</span>
+            فندق كورال عدن السياحي | 5 Star Luxury
+        </div>
+
+        <h1>ماسح كروت الواي فاي الذكي</h1>
+        <p class="subtitle">وجّه الكاميرا الخلفية نحو كرت النت للاتصال التلقائي</p>
+
+        <div class="camera-container">
+            <div id="reader"></div>
+            <div class="scan-overlay">
+                <div class="laser-line"></div>
+            </div>
+        </div>
+
+        <!-- زر فتح في متصفح سفاري لمستخدمي الآيفون -->
+        <div class="safari-box">
+            <a id="btnSafariGitHub" href="#" target="_blank" rel="noopener noreferrer" class="btn-safari">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76" fill="currentColor"></polygon></svg>
+                <span>فتح في متصفح سفاري (Safari للآيفون)</span>
+            </a>
+            <p style="font-size:11px; color:#94a3b8; margin:6px 0 0 0; text-align:center; font-weight:600;">
+                🍎 إذا لم تظهر نافذة طلب إذن الكاميرا، اضغط الزر الأزرق أعلاه لفتح Safari
+            </p>
+        </div>
+
+        <div class="controls-row">
+            <button type="button" class="btn-action" id="switchCameraBtn">🔄 تبديل الكاميرا</button>
+            <button type="button" class="btn-action" id="torchBtn" style="display:none;">💡 تشغيل الفلاش</button>
+        </div>
+
+        <div class="status-box" id="statusText">جاري تشغيل الكاميرا الخلفية...</div>
+
+        <a id="backBtn" href="http://coral.net" class="btn-back">↩️ العودة لصفحة الدخول (coral.net)</a>
+
+        <div class="footer-note">
+            تصميم وتطوير: <b>برونت كمبيوتر (ProNet Computer)</b> - هاتف: 02-241004 / 775043020
+        </div>
+    </div>
+
+    <script>
+        // مفاتيح فك التشفير المعتمدة لكروت الهوتسبوت وشبكات برونت كمبيوتر
+        const CORAL_SECRET_KEYS = [
+            "CORAL_ADEN_HOTEL_2026_KEY",
+            "PRONET_HOTSPOT_CORAL_2026",
+            "CORAL#2026#SECRET",
+            "DOLPHIN_RESORT_2026_KEY",
+            "RAH_RoseAden_Hotel_2026_Secure"
+        ];
+
+        // استخراج عنوان الراوتر الممرر عبر tthh (الافتراضي والمعتمد لفندق كورال عدن هو coral.net وليس الآي بي)
+        const urlParams = new URLSearchParams(window.location.search);
+        let routerOrigin = urlParams.get('tthh') || "http://coral.net";
+        if (!routerOrigin || routerOrigin.startsWith("file") || routerOrigin.includes("undefined") || routerOrigin.includes("10.0.0.1") || routerOrigin.includes("10.10.0.1") || routerOrigin.includes("null")) {
+            routerOrigin = "http://coral.net";
+        }
+        if (!routerOrigin.startsWith("http://") && !routerOrigin.startsWith("https://")) {
+            routerOrigin = "http://" + routerOrigin;
+        }
+        
+        // ضبط زر العودة برابط الراوتر
+        document.getElementById("backBtn").href = routerOrigin;
+
+        // تحديث زر Safari بالرابط الكامل مع المعلمات
+        const btnSafGH = document.getElementById("btnSafariGitHub");
+        if (btnSafGH) {
+            btnSafGH.href = window.location.href;
+            btnSafGH.addEventListener("click", function(e) {
+                window.open(window.location.href, "_blank");
+            });
+        }
+
+        // محرك فك تشفير RC4 مع دعم المفاتيح المتعددة
+        function coralDecrypt(b64Data) {
+            try {
+                const raw = atob(b64Data);
+                for (let k = 0; k < CORAL_SECRET_KEYS.length; k++) {
+                    const key = CORAL_SECRET_KEYS[k];
+                    let S = Array.from({length: 256}, (_, i) => i);
+                    let j = 0;
+                    for (let i = 0; i < 256; i++) {
+                        j = (j + S[i] + key.charCodeAt(i % key.length)) % 256;
+                        [S[i], S[j]] = [S[j], S[i]];
+                    }
+                    let i = 0, j2 = 0, out = "";
+                    for (let x = 0; x < raw.length; x++) {
+                        i = (i + 1) % 256;
+                        j2 = (j2 + S[i]) % 256;
+                        [S[i], S[j2]] = [S[j2], S[i]];
+                        out += String.fromCharCode(raw.charCodeAt(x) ^ S[(S[i] + S[j2]) % 256]);
+                    }
+                    if (out && (out.includes(":") || /^[0-9a-zA-Z_-]+$/.test(out))) {
+                        return out;
+                    }
+                }
+                return null;
+            } catch(e) {
+                return null;
+            }
+        }
+
+        // نغمة نجاح القراءة عبر Web Audio API
+        function playBeep() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.frequency.setValueAtTime(880, ctx.currentTime);
+                gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.15);
+            } catch(e){}
+        }
+
+        let isScanned = false;
+
+        function onScanSuccess(decodedText) {
+            if (isScanned) return;
+            isScanned = true;
+            playBeep();
+            try { if (navigator.vibrate) navigator.vibrate([100, 50, 100]); } catch(e){}
+
+            const statusEl = document.getElementById("statusText");
+            statusEl.innerHTML = "<b style='color:#38bdf8;'>تم مسح الكود، جاري المعالجة...</b>";
+
+            let username = "";
+            let password = "";
+
+            decodedText = decodedText.trim();
+
+            // 1. الكود المشفر (CORAL# أو DOLPHIN# أو RAH#)
+            if (decodedText.startsWith("CORAL#") || decodedText.startsWith("DOLPHIN#") || decodedText.startsWith("RAH#")) {
+                const prefixLen = decodedText.indexOf("#") + 1;
+                const dec = coralDecrypt(decodedText.substring(prefixLen));
+                if (dec) {
+                    if (dec.includes(":")) {
+                        const parts = dec.split(":");
+                        username = parts[0];
+                        password = parts[1];
+                    } else {
+                        username = dec;
+                    }
+                }
+            } 
+            // 2. رابط يحتوي على معلمات الدخول
+            else if (decodedText.includes("username=") || decodedText.includes("user=")) {
+                try {
+                    const urlObj = new URL(decodedText.startsWith("http") ? decodedText : "http://dummy/" + decodedText);
+                    username = urlObj.searchParams.get("username") || urlObj.searchParams.get("user") || "";
+                    password = urlObj.searchParams.get("password") || urlObj.searchParams.get("pass") || "";
+                } catch(e) {
+                    const mU = decodedText.match(/(?:username|user)=([^&]+)/i);
+                    const mP = decodedText.match(/(?:password|pass)=([^&]+)/i);
+                    if (mU) username = decodeURIComponent(mU[1]);
+                    if (mP) password = decodeURIComponent(mP[1]);
+                }
+            }
+            // 3. صيغة كروت الواي فاي القياسية: USER:xxx;PASS:xxx;
+            else if (/USER:[^;]+;/i.test(decodedText)) {
+                const mU = decodedText.match(/USER:([^;]+);/i);
+                const mP = decodedText.match(/PASS:([^;]+);/i);
+                if (mU) username = mU[1].trim();
+                if (mP) password = mP[1].trim();
+            }
+            // 4. صيغة JSON
+            else if (decodedText.startsWith("{") && decodedText.endsWith("}")) {
+                try {
+                    const obj = JSON.parse(decodedText);
+                    username = obj.username || obj.user || obj.u || "";
+                    password = obj.password || obj.pass || obj.p || "";
+                } catch(e) {}
+            }
+            // 5. صيغة مباشرة username:password أو user/pass أو user,pass
+            else if (/[:\/|,]/.test(decodedText) && !decodedText.startsWith("http")) {
+                const parts = decodedText.split(/[:\/|,]/);
+                username = parts[0].trim();
+                password = parts.length > 1 ? parts[1].trim() : "";
+            }
+            // 6. اسم مستخدم / رقم كرت صريح
+            else {
+                username = decodedText;
+            }
+
+            if (username) {
+                statusEl.innerHTML = `<b style='color:#4ade80;'>✅ مرحباً بك! الكرت (${username}) سليم، جاري الاتصال...</b>`;
+                try { html5QrCode.stop(); } catch(e){}
+
+                setTimeout(() => {
+                    window.location.href = `${routerOrigin}/index.html?username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
+                }, 600);
+            } else {
+                isScanned = false;
+                statusEl.innerHTML = "<b style='color:#fb7185;'>⚠️ الرمز مشفر أو غير مطابق، يرجى المحاولة مجدداً!</b>";
+            }
+        }
+
+        // تشغيل مكتبة Html5Qrcode
+        const html5QrCode = new Html5Qrcode("reader");
+        let currentCameraIndex = 0;
+        let availableCameras = [];
+        let isTorchOn = false;
+
+        const qrConfig = {
+            fps: 15,
+            qrbox: { width: 250, height: 250 },
+            aspectRatio: 1.0
+        };
+
+        async function startBackCamera() {
+            try {
+                // 1. محاولة طلب الكاميرا الخلفية إجبارياً
+                await html5QrCode.start({ facingMode: { exact: "environment" } }, qrConfig, onScanSuccess, () => {});
+                document.getElementById("statusText").textContent = "تم تشغيل الكاميرا الخلفية، وجّه العدسة نحو الكرت";
+                checkTorchSupport();
+            } catch (errExact) {
+                try {
+                    // 2. محاولة طلب الكاميرا الخلفية الافتراضية
+                    await html5QrCode.start({ facingMode: "environment" }, qrConfig, onScanSuccess, () => {});
+                    document.getElementById("statusText").textContent = "تم تشغيل الكاميرا الخلفية، وجّه العدسة نحو الكرت";
+                    checkTorchSupport();
+                } catch (errPref) {
+                    try {
+                        // 3. فحص قائمة الكاميرات واختيار الخلفية بالاسم
+                        availableCameras = await Html5Qrcode.getCameras();
+                        if (availableCameras && availableCameras.length) {
+                            let backCam = availableCameras.find(c => 
+                                c.label.toLowerCase().includes("back") || 
+                                c.label.toLowerCase().includes("rear") || 
+                                c.label.toLowerCase().includes("environment") ||
+                                c.label.toLowerCase().includes("خلفية")
+                            );
+                            let selectedId = backCam ? backCam.id : availableCameras[availableCameras.length - 1].id;
+                            await html5QrCode.start(selectedId, qrConfig, onScanSuccess, () => {});
+                            document.getElementById("statusText").textContent = "تم تشغيل الكاميرا الخلفية بنجاح";
+                            checkTorchSupport();
+                        }
+                    } catch (errList) {
+                        document.getElementById("statusText").innerHTML = "<div style='padding:4px;'><b style='color:#fb7185; display:block; margin-bottom:4px;'>⚠️ تعذر تشغيل الكاميرا داخل المتصفح المصغر</b><span style='color:#cbd5e1; font-size:12px;'>لمستخدمي آيفون: اضغط زر (فتح في متصفح سفاري) الأزرق أعلاه، أو افتح Safari واكتب عنوان الراوتر</span></div>";
+                    }
+                }
+            }
+        }
+
+        // تشغيل الكاميرا فور تحميل الصفحة
+        startBackCamera();
+
+        // زر تبديل الكاميرا
+        document.getElementById("switchCameraBtn").addEventListener("click", async () => {
+            try {
+                if (!availableCameras || !availableCameras.length) {
+                    availableCameras = await Html5Qrcode.getCameras();
+                }
+                if (availableCameras && availableCameras.length > 1) {
+                    await html5QrCode.stop();
+                    currentCameraIndex = (currentCameraIndex + 1) % availableCameras.length;
+                    await html5QrCode.start(availableCameras[currentCameraIndex].id, qrConfig, onScanSuccess, () => {});
+                    document.getElementById("statusText").textContent = "تم تبديل الكاميرا: " + (availableCameras[currentCameraIndex].label || "كاميرا " + (currentCameraIndex+1));
+                    checkTorchSupport();
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        });
+
+        // فحص ودعم تشغيل الفلاش (Torch)
+        function checkTorchSupport() {
+            try {
+                const track = html5QrCode.getRunningTrackCapabilities();
+                if (track && track.torch) {
+                    const tBtn = document.getElementById("torchBtn");
+                    if (tBtn) {
+                        tBtn.style.display = "inline-flex";
+                        tBtn.onclick = async () => {
+                            isTorchOn = !isTorchOn;
+                            await html5QrCode.applyVideoConstraints({ advanced: [{ torch: isTorchOn }] });
+                            tBtn.textContent = isTorchOn ? "🚫 إيقاف الفلاش" : "💡 تشغيل الفلاش";
+                        };
+                    }
+                }
+            } catch(e){}
+        }
+    </script>
+</body>
+</html>
