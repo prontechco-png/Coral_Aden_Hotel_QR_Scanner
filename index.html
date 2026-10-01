@@ -480,11 +480,11 @@
             "RAH_RoseAden_Hotel_2026_Secure"
         ];
 
-        // استخراج عنوان الراوتر الممرر عبر tthh (الافتراضي والمعتمد لفندق كورال عدن هو coral.net وليس الآي بي)
+        // استخراج عنوان الراوتر الممرر عبر tthh (الافتراضي والمعتمد لفندق كورال عدن هو c.com وليس الآي بي)
         const urlParams = new URLSearchParams(window.location.search);
-        let routerOrigin = urlParams.get('tthh') || "http://coral.net";
+        let routerOrigin = urlParams.get('tthh') || "http://c.com";
         if (!routerOrigin || routerOrigin.startsWith("file") || routerOrigin.includes("undefined") || routerOrigin.includes("10.0.0.1") || routerOrigin.includes("10.10.0.1") || routerOrigin.includes("null")) {
-            routerOrigin = "http://coral.net";
+            routerOrigin = "http://c.com";
         }
         if (!routerOrigin.startsWith("http://") && !routerOrigin.startsWith("https://")) {
             routerOrigin = "http://" + routerOrigin;
