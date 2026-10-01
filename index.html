@@ -460,7 +460,7 @@
 
         <div class="status-box" id="statusText">جاري تشغيل الكاميرا الخلفية...</div>
 
-        <a id="backBtn" href="http://c.om" class="btn-back">↩️ العودة لصفحة الدخول (c.om)</a>
+        <a id="backBtn" href="http://c.com" class="btn-back">↩️ العودة لصفحة الدخول (c.com)</a>
 
         <!-- الفوتر الموحد لمعلومات التطوير والدعم الفني -->
         <div class="pronet-unified-footer">
@@ -480,11 +480,11 @@
             "RAH_RoseAden_Hotel_2026_Secure"
         ];
 
-        // استخراج عنوان الراوتر الممرر عبر tthh (النطاق الموحد لكافة جسور المايكروتك: c.om)
+        // استخراج عنوان الراوتر الممرر عبر tthh (النطاق الموحد لكافة جسور المايكروتك: c.com)
         const urlParams = new URLSearchParams(window.location.search);
-        let routerOrigin = urlParams.get('tthh') || "http://c.om";
+        let routerOrigin = urlParams.get('tthh') || "http://c.com";
         if (!routerOrigin || routerOrigin.startsWith("file") || routerOrigin.includes("undefined") || routerOrigin.includes("null")) {
-            routerOrigin = "http://c.om";
+            routerOrigin = "http://c.com";
         }
         if (!routerOrigin.startsWith("http://") && !routerOrigin.startsWith("https://")) {
             routerOrigin = "http://" + routerOrigin;
@@ -622,7 +622,7 @@
                     <div style="padding:4px;">
                         <b style="color:#4ade80; display:block; margin-bottom:4px;">✅ تم فحص الكرت بنجاح: (${username})</b>
                         <span style="color:#38bdf8; font-size:12px; display:block; margin-bottom:8px;">جاري توجيهك إلى راوتر المايكروتك لتسجيل الدخول...</span>
-                        <a href="${targetUrl}" class="btn-action" style="display:inline-flex; background:linear-gradient(135deg,#0284c7,#0369a1); color:#ffffff; text-decoration:none; padding:8px 16px; border-radius:10px; font-weight:800; font-size:13px; border:1px solid rgba(56,189,248,0.5);">دخول مباشر إلى الشبكة (c.om)</a>
+                        <a href="${targetUrl}" class="btn-action" style="display:inline-flex; background:linear-gradient(135deg,#0284c7,#0369a1); color:#ffffff; text-decoration:none; padding:8px 16px; border-radius:10px; font-weight:800; font-size:13px; border:1px solid rgba(56,189,248,0.5);">دخول مباشر إلى الشبكة (c.com)</a>
                     </div>
                 `;
                 try { html5QrCode.stop(); } catch(e){}
