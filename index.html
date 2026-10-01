@@ -340,7 +340,7 @@
 
         // استخراج عنوان الراوتر الممرر عبر tthh (الافتراضي والمعتمد لفندق كورال عدن هو coral.net وليس الآي بي)
         const urlParams = new URLSearchParams(window.location.search);
-        let routerOrigin = urlParams.get('tthh') || "index.html";
+        let routerOrigin = urlParams.get('tthh') || "http://coral.net";
         if (!routerOrigin || routerOrigin.startsWith("file") || routerOrigin.includes("undefined") || routerOrigin.includes("10.0.0.1") || routerOrigin.includes("10.10.0.1") || routerOrigin.includes("null")) {
             routerOrigin = "http://coral.net";
         }
